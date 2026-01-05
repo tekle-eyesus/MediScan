@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Model Weights (Too large for free GitHub, we will handle these separately)
+*.pt
+*.pth
+*.h5
+*.tflite
+
+# Flutter
+.dart_tool/
+.packages
+build/
