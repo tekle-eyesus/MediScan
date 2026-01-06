@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     API_PREFIX: str = os.getenv("API_PREFIX", "/api/v1")
     
     # Database Config
-    MONGO_URL: str = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+    MONGO_URL: str = os.getenv("MONGO_URL")
     DATABASE_NAME: str = os.getenv("DATABASE_NAME", "mediscan_db")
     
     # Origins (for CORS later when Frontend connects)

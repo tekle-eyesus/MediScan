@@ -1,3 +1,4 @@
+import certifi
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from app.core.config import settings
@@ -7,10 +8,13 @@ async def init_db():
     """
     Initialize the database connection and Beanie ODM.
     """
-    # Create Motor Client
-    client = AsyncIOMotorClient(settings.MONGO_URL)
+    # Create Motor Client with SSL context
+    client = AsyncIOMotorClient(
+        settings.MONGO_URL,
+        tlsCAFile=certifi.where()
+    )
     
-    # Initialize Beanie with the specific database and models
+    # Initialize Beanie
     await init_beanie(
         database=client[settings.DATABASE_NAME],
         document_models=[MedicalRecord]
