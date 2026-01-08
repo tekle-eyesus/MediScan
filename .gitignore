@@ -9,6 +9,7 @@ venv/
 *.pth
 *.h5
 *.tflite
+*.db
 
 # Flutter
 .dart_tool/
