@@ -5,24 +5,21 @@ from app.core.database import init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_db()
+    init_db() 
     yield
-    pass
 
-# Initialize App with Lifespan
 app = FastAPI(
     title="MediScan Ethiopia API",
     description="Backend for Pneumonia Detection and XAI generation",
     version="1.0.0",
-    lifespan=lifespan 
+    lifespan=lifespan
 )
 
-# Register Routes
 app.include_router(predict.router, prefix="/api/v1", tags=["AI Diagnosis"])
 
 @app.get("/")
 async def root():
-    return {"message": "MediScan Backend is running", "status": "active"}
+    return {"message": "MediScan Backend is running (SQLite)", "status": "active"}
 
 if __name__ == "__main__":
     import uvicorn
