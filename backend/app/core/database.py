@@ -1,22 +1,21 @@
-import certifi
-from motor.motor_asyncio import AsyncIOMotorClient
-from beanie import init_beanie
-from app.core.config import settings
-from app.models.medical_record import MedicalRecord
+from sqlmodel import SQLModel, create_engine, Session
+from typing import Generator
 
-async def init_db():
+SQLITE_FILE_NAME = "mediscan.db"
+sqlite_url = f"sqlite:///{SQLITE_FILE_NAME}"
+
+engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})
+
+def init_db():
     """
-    Initialize the database connection and Beanie ODM.
+    Creates the tables in the database if they don't exist.
     """
-    # Create Motor Client with SSL context
-    client = AsyncIOMotorClient(
-        settings.MONGO_URL,
-        tlsCAFile=certifi.where()
-    )
-    
-    # Initialize Beanie
-    await init_beanie(
-        database=client[settings.DATABASE_NAME],
-        document_models=[MedicalRecord]
-    )
-    print("✅ MongoDB Connected and Beanie Initialized!")
+    SQLModel.metadata.create_all(engine)
+    print("✅ SQLite Database Connected & Tables Created!")
+
+def get_session() -> Generator[Session, None, None]:
+    """
+    Dependency to provide a database session to endpoints.
+    """
+    with Session(engine) as session:
+        yield session
