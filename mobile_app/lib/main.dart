@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'MediScan AI App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF0052cc)), // Medical Blue
+        useMaterial3: true,
+        textTheme: GoogleFonts.interTextTheme(),
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text('MediScan AI'),
+        ),
+        body: const Center(
+          child: Text("MediScan Mobile App Completed!"),
+        ),
+      ),
+    );
+  }
+}
