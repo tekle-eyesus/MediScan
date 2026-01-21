@@ -56,3 +56,13 @@ async def get_patient_history(
     statement = select(MedicalRecord).where(MedicalRecord.patient_id == patient_id)
     results = session.exec(statement).all()
     return results
+
+# Add this new route at the bottom of the file
+@router.get("/records/recent")
+async def get_recent_records(session: Session = Depends(get_session)):
+    """
+    Get the 50 most recent diagnoses for the History Tab.
+    """
+    statement = select(MedicalRecord).order_by(MedicalRecord.created_at.desc()).limit(50)
+    results = session.exec(statement).all()
+    return results
