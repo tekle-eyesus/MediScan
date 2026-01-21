@@ -52,4 +52,14 @@ class ApiService {
       throw Exception("Unknown Error: $e");
     }
   }
+
+  // Fetch recent history
+  Future<List<dynamic>> fetchRecentRecords() async {
+    try {
+      Response response = await _dio.get(ApiConstants.recentRecordsEndpoint);
+      return response.data;
+    } catch (e) {
+      throw Exception("Failed to load history: $e");
+    }
+  }
 }
