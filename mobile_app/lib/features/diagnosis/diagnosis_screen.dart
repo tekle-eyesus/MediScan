@@ -1,13 +1,22 @@
 import 'dart:convert'; // For decoding the Heatmap
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medScan_AI/core/widgets/full_screen_image.dart';
+import 'package:medScan_AI/features/diagnosis/widgets/confidence_chart.dart';
 import 'package:provider/provider.dart';
 import 'diagnosis_provider.dart';
 
-class DiagnosisScreen extends StatelessWidget {
+class DiagnosisScreen extends StatefulWidget {
   const DiagnosisScreen({super.key});
 
+  @override
+  State<DiagnosisScreen> createState() => _DiagnosisScreenState();
+}
+
+class _DiagnosisScreenState extends State<DiagnosisScreen> {
+  bool _showHeatmap = true;
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<DiagnosisProvider>(context);
@@ -141,74 +150,174 @@ class DiagnosisScreen extends StatelessWidget {
     );
   }
 
+  // Widget _buildResultCard(DiagnosisProvider provider) {
   Widget _buildResultCard(DiagnosisProvider provider) {
     final result = provider.diagnosisResult!;
     final String prediction = result['prediction'];
     final double confidence = result['confidence'];
     final String? heatmapBase64 = result['heatmap_base64'];
-
     final isPneumonia = prediction == "PNEUMONIA";
 
-    return Card(
-      margin: const EdgeInsets.only(top: 20),
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Column(
+      children: [
+        // 1. IMAGE OVERLAY SECTION
+        Stack(
+          alignment: Alignment.bottomRight,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  isPneumonia
-                      ? Icons.warning_amber_rounded
-                      : Icons.check_circle,
-                  color: isPneumonia ? Colors.red : Colors.green,
-                  size: 30,
+            // The Image Container
+            GestureDetector(
+              onTap: () {
+                // Open Full Screen
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => FullScreenImage(
+                              imageFile: provider.selectedImage,
+                              tag: "diagnosis_image",
+                            )));
+              },
+              child: Hero(
+                tag: "diagnosis_image",
+                child: Container(
+                  height: 350,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.black,
+                    image: DecorationImage(
+                      image: FileImage(provider.selectedImage!),
+                      fit: BoxFit.cover, // Ensure it fills the box
+                    ),
+                  ),
+                  child: (_showHeatmap && heatmapBase64 != null)
+                      ? Opacity(
+                          opacity: 0.6, // Semi-transparent overlay
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.memory(
+                              base64Decode(heatmapBase64),
+                              fit: BoxFit.cover, // MUST match the parent fit
+                              gaplessPlayback: true,
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  prediction,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: isPneumonia ? Colors.red : Colors.green,
+              ),
+            ),
+
+            // Toggle Switch
+            if (heatmapBase64 != null)
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text("Heatmap",
+                          style: TextStyle(color: Colors.white)),
+                      const SizedBox(width: 8),
+                      CupertinoSwitch(
+                        value: _showHeatmap,
+                        activeColor: Colors.blueAccent,
+                        onChanged: (val) {
+                          setState(() {
+                            _showHeatmap = val;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Text(
-              "Confidence: ${(confidence * 100).toStringAsFixed(1)}%",
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const Divider(height: 30),
-
-            // HEATMAP DISPLAY
-            if (heatmapBase64 != null) ...[
-              const Text(
-                "AI Visual Explanation (Heatmap)",
-                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.memory(
-                  base64Decode(heatmapBase64), // Decode the string from Python
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Red areas indicate where the AI detected abnormalities.",
-                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
-              ),
-            ]
           ],
         ),
-      ),
+
+        const SizedBox(height: 20),
+
+        // 2. DIAGNOSIS INFO CARD
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5))
+            ],
+          ),
+          child: Row(
+            children: [
+              // Left: Text Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Diagnosis Result",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      prediction,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: isPneumonia ? Colors.red : Colors.green,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: isPneumonia
+                            ? Colors.red.withOpacity(0.1)
+                            : Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        isPneumonia ? "Abnormality Detected" : "Healthy Lungs",
+                        style: TextStyle(
+                          color: isPneumonia ? Colors.red : Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Right: Chart
+              ConfidenceChart(confidence: confidence, isPneumonia: isPneumonia),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        // 3. GENERATE REPORT BUTTON
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.print),
+            label: const Text("GENERATE MEDICAL REPORT"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[900],
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            onPressed: () {},
+            // onPressed: () => _generatePdfReport(provider),
+          ),
+        ),
+      ],
     );
   }
 }
