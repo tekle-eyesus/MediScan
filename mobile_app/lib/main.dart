@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medScan_AI/features/diagnosis/diagnosis_provider.dart';
+import 'package:medScan_AI/features/diagnosis/diagnosis_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -28,15 +29,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: GoogleFonts.interTextTheme(),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text('MediScan AI'),
-        ),
-        body: const Center(
-          child: Text("MediScan Mobile App Completed!"),
-        ),
-      ),
+      home: const DiagnosisScreen(),
     );
   }
 }
