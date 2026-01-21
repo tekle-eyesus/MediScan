@@ -50,6 +50,16 @@ dependencies:
   intl: ^0.19.0 # For date formatting
   cached_network_image: ^3.3.1 # To display the heatmap smoothly
   flutter_spinkit: ^5.2.0 # Loading indicators
+  # For the Charts (Confidence UI)
+  fl_chart: ^0.66.2
+  
+  # For Full Screen Zoomable Images
+  photo_view: ^0.14.0
+  
+  # For PDF Generation & Printing
+  pdf: ^3.10.8
+  printing: ^5.11.1
+
 
 dev_dependencies:
   flutter_test:
