@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medScan_AI/features/diagnosis/diagnosis_provider.dart';
 import 'package:medScan_AI/features/diagnosis/diagnosis_screen.dart';
+import 'package:medScan_AI/features/history/history_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -9,6 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DiagnosisProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
       ],
       child: const MyApp(),
     ),
