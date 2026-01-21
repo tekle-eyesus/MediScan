@@ -50,45 +50,66 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     final formattedDate =
                         DateFormat('MMM d, h:mm a').format(date);
 
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor:
-                              isPneumonia ? Colors.red[100] : Colors.green[100],
-                          child: Icon(
-                            isPneumonia ? Icons.warning : Icons.check,
-                            color: isPneumonia ? Colors.red : Colors.green,
+                    return Dismissible(
+                      key: Key(record['id'].toString()),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
+                        // Call the delete function
+                        Provider.of<HistoryProvider>(context, listen: false)
+                            .deleteRecord(record['id']);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Record deleted')),
+                        );
+                      },
+                      child: Card(
+                        elevation: 2,
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: isPneumonia
+                                ? Colors.red[100]
+                                : Colors.green[100],
+                            child: Icon(
+                              isPneumonia ? Icons.warning : Icons.check,
+                              color: isPneumonia ? Colors.red : Colors.green,
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          "Patient: ${record['patient_id']}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle:
-                            Text("Dr. ${record['doctor_id']} • $formattedDate"),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              record['prediction'],
-                              style: TextStyle(
-                                color: isPneumonia ? Colors.red : Colors.green,
-                                fontWeight: FontWeight.bold,
+                          title: Text(
+                            "Patient: ${record['patient_id']}",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                              "Dr. ${record['doctor_id']} • $formattedDate"),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                record['prediction'],
+                                style: TextStyle(
+                                  color:
+                                      isPneumonia ? Colors.red : Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "${(record['confidence'] * 100).toStringAsFixed(1)}%",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.grey),
-                            ),
-                          ],
+                              Text(
+                                "${(record['confidence'] * 100).toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            // Optional: Navigate to a details view to see the Heatmap again
+                          },
                         ),
-                        onTap: () {
-                          // Optional: Navigate to a details view to see the Heatmap again
-                        },
                       ),
                     );
                   },

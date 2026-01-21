@@ -26,4 +26,16 @@ class HistoryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> deleteRecord(int id) async {
+    try {
+      await _apiService.deleteRecord(id);
+      // Remove from local list to update UI instantly
+      _records.removeWhere((item) => item['id'] == id);
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = "Failed to delete: $e";
+      notifyListeners();
+    }
+  }
 }

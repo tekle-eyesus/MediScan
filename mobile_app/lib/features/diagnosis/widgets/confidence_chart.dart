@@ -14,7 +14,8 @@ class ConfidenceChart extends StatelessWidget {
     final color = isPneumonia ? Colors.red : Colors.green;
 
     return SizedBox(
-      height: 150,
+      height: 120,
+      width: 120,
       child: Stack(
         alignment: Alignment.center,
         children: [

@@ -66,3 +66,14 @@ async def get_recent_records(session: Session = Depends(get_session)):
     statement = select(MedicalRecord).order_by(MedicalRecord.created_at.desc()).limit(50)
     results = session.exec(statement).all()
     return results
+
+# Add at the bottom of the file
+@router.delete("/records/{record_id}")
+async def delete_record(record_id: int, session: Session = Depends(get_session)):
+    record = session.get(MedicalRecord, record_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Record not found")
+    
+    session.delete(record)
+    session.commit()
+    return {"ok": True}

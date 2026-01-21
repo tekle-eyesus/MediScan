@@ -62,4 +62,12 @@ class ApiService {
       throw Exception("Failed to load history: $e");
     }
   }
+
+  Future<void> deleteRecord(int id) async {
+    try {
+      await _dio.delete("${ApiConstants.baseUrl}/api/v1/records/$id");
+    } catch (e) {
+      throw Exception("Failed to delete record");
+    }
+  }
 }

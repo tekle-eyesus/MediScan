@@ -27,8 +27,8 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
     // Load Images for PDF
     final imageBytes = await provider.selectedImage!.readAsBytes();
-    final logoImage = await imageFromAssetBundle(
-        'assets/logo.png'); // Optional: Add a logo later
+    // final logoImage = await imageFromAssetBundle(
+    //     'assets/icons/logo.png'); // Optional: Add a logo later
 
     pdf.addPage(
       pw.Page(
@@ -255,7 +255,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     );
   }
 
-  // Widget _buildResultCard(DiagnosisProvider provider) {
   Widget _buildResultCard(DiagnosisProvider provider) {
     final result = provider.diagnosisResult!;
     final String prediction = result['prediction'];
@@ -265,7 +264,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
     return Column(
       children: [
-        // 1. IMAGE OVERLAY SECTION
+        // IMAGE OVERLAY SECTION
         Stack(
           alignment: Alignment.bottomRight,
           children: [
@@ -311,7 +310,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               ),
             ),
 
-            // Toggle Switch
+            // Toggle Switcha
             if (heatmapBase64 != null)
               Padding(
                 padding: const EdgeInsets.all(12.0),
