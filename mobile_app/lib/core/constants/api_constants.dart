@@ -6,4 +6,5 @@ class ApiConstants {
   // Endpoints
   static const String analyzeEndpoint = "$baseUrl/api/v1/analyze";
   static const String historyEndpoint = "$baseUrl/api/v1/history";
+  static const String recentRecordsEndpoint = "$baseUrl/api/v1/records/recent";
 }
