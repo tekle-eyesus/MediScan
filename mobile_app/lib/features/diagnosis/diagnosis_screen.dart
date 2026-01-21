@@ -1,5 +1,6 @@
 import 'dart:convert'; // For decoding the Heatmap
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'diagnosis_provider.dart';
@@ -13,7 +14,10 @@ class DiagnosisScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("MediScan AI Diagnosis"),
+        title: Text(
+          "MediScan AI",
+          style: GoogleFonts.poppins(),
+        ),
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
         actions: [
