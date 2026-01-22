@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medScan_AI/core/snackbar/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'history_provider.dart';
@@ -74,8 +75,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         Provider.of<HistoryProvider>(context, listen: false)
                             .deleteRecord(record['id']);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Record deleted')),
+                        CustomSnackbar.showSnackbar(
+                          context,
+                          "Record deleted",
+                          type: 'info',
                         );
                       },
                       child: Card(
