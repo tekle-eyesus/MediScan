@@ -25,13 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
         children: _screens,
       ),
       bottomNavigationBar: NavigationBar(
+        height: 60,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _currentIndex,
         onDestinationSelected: (int index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        destinations: const [
+        backgroundColor: Colors.white,
+        indicatorColor: Color(0xFF438EA5).withOpacity(0.3),
+        destinations: [
           NavigationDestination(
             icon: Icon(Icons.qr_code_scanner),
             label: 'Scan',
