@@ -28,12 +28,17 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<void> deleteRecord(int id) async {
+    final index = _records.indexWhere((item) => item['id'] == id);
+    if (index == -1) return;
+
+    final removed = _records.removeAt(index);
+    notifyListeners();
+
     try {
       await _apiService.deleteRecord(id);
-      // Remove from local list to update UI instantly
-      _records.removeWhere((item) => item['id'] == id);
-      notifyListeners();
     } catch (e) {
+      // Roll back if the API call fails
+      _records.insert(index, removed);
       _errorMessage = "Failed to delete: $e";
       notifyListeners();
     }
