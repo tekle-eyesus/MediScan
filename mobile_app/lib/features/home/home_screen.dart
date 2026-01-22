@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const DiagnosisScreen(),
     const HistoryScreen(),
+    const Center(child: Text("Settings Screen")), // Placeholder for Settings
   ];
 
   @override
@@ -43,6 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
             icon: Icon(Icons.history),
             label: 'History',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
