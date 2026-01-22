@@ -52,14 +52,13 @@ dependencies:
   flutter_spinkit: ^5.2.0 # Loading indicators
   # For the Charts (Confidence UI)
   fl_chart: ^0.66.2
-  
+
   # For Full Screen Zoomable Images
   photo_view: ^0.14.0
-  
+
   # For PDF Generation & Printing
   pdf: ^3.10.8
   printing: ^5.11.1
-
 
 dev_dependencies:
   flutter_test:
@@ -84,8 +83,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons
-    - assets/images
+    - assets/icons/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
