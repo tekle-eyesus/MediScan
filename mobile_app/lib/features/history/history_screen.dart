@@ -75,10 +75,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         Provider.of<HistoryProvider>(context, listen: false)
                             .deleteRecord(record['id']);
 
-                        CustomSnackbar.showSnackbar(
+                        CustomSnackBar.showInfo(
                           context,
                           "Record deleted",
-                          type: 'info',
                         );
                       },
                       child: Card(
