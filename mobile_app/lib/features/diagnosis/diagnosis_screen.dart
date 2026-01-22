@@ -132,7 +132,15 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
           "MediScan AI",
           style: GoogleFonts.poppins(),
         ),
-        backgroundColor: Colors.blueAccent,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF438EA5), Color(0xFF4DA49C)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         foregroundColor: Colors.white,
         actions: [
           if (provider.selectedImage != null)
