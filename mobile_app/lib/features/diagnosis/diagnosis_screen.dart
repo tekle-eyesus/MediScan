@@ -303,7 +303,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   ),
                   child: (_showHeatmap && heatmapBase64 != null)
                       ? Opacity(
-                          opacity: 0.6, // Semi-transparent overlay
+                          opacity: 0.8, // Semi-transparent overlay
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image.memory(
@@ -318,7 +318,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               ),
             ),
 
-            // Toggle Switcha
+            // Toggle Switch
             if (heatmapBase64 != null)
               Padding(
                 padding: const EdgeInsets.all(12.0),
