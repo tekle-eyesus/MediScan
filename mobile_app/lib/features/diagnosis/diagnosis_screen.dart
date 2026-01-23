@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medScan_AI/core/widgets/full_screen_image.dart';
 import 'package:medScan_AI/features/diagnosis/widgets/confidence_chart.dart';
+import 'package:medScan_AI/features/settings/settings_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   Future<void> _generatePdfReport(DiagnosisProvider provider) async {
     final pdf = pw.Document();
     final result = provider.diagnosisResult!;
-
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     // Load Images for PDF
     final imageBytes = await provider.selectedImage!.readAsBytes();
     // final logoImage = await imageFromAssetBundle(
@@ -59,12 +60,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text("Patient ID: ${result['patient_id']}"),
-                    pw.Text(
-                        "Doctor: Dr. Demo"), // Replace with actual doctor name
-                    pw.Text("Facility: Black Lion Hospital"),
+                    pw.Text("Doctor: ${settings.doctorName}"),
+                    pw.Text("ID: ${settings.doctorId}"),
+                    pw.Text("Facility: ${settings.hospitalName}"),
                   ],
                 ),
               ),
+
               pw.SizedBox(height: 20),
 
               // Images Side by Side
