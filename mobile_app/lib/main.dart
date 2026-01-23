@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:medScan_AI/features/diagnosis/diagnosis_provider.dart';
 import 'package:medScan_AI/features/history/history_provider.dart';
 import 'package:medScan_AI/features/home/home_screen.dart';
+import 'package:medScan_AI/features/settings/settings_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -11,6 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => DiagnosisProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: const MyApp(),
     ),
