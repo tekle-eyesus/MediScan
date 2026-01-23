@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medScan_AI/features/settings/settings_screen.dart';
 import '../diagnosis/diagnosis_screen.dart';
 import '../history/history_screen.dart';
 
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const DiagnosisScreen(),
     const HistoryScreen(),
-    const Center(child: Text("Settings Screen")), // Placeholder for Settings
+    const SettingsScreen(),
   ];
 
   @override
