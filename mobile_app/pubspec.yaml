@@ -60,6 +60,8 @@ dependencies:
   pdf: ^3.10.8
   printing: ^5.11.1
   flutter_launcher_icons: ^0.13.1
+  shared_preferences: ^2.2.2
+  package_info_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:
