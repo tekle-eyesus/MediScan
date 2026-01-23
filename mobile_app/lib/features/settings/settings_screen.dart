@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'settings_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -23,11 +27,143 @@ class SettingsScreen extends StatelessWidget {
         ),
         foregroundColor: Colors.white,
       ),
-      body: Center(
-        child: Text(
-          'Settings Screen',
-          style: TextStyle(fontSize: 24),
+      body: ListView(
+        children: [
+          // SECTION 1: DOCTOR PROFILE
+          _buildSectionHeader("Doctor Profile"),
+          _buildListTile(
+            context,
+            icon: Icons.person,
+            title: "Doctor Name",
+            subtitle: settings.doctorName,
+            onTap: () => _showEditDialog(context, "Doctor Name",
+                settings.doctorName, (val) => settings.setDoctorName(val)),
+          ),
+          _buildListTile(
+            context,
+            icon: Icons.badge,
+            title: "Doctor ID",
+            subtitle: settings.doctorId,
+            onTap: () => _showEditDialog(context, "Doctor ID",
+                settings.doctorId, (val) => settings.setDoctorId(val)),
+          ),
+          _buildListTile(
+            context,
+            icon: Icons.local_hospital,
+            title: "Hospital / Clinic",
+            subtitle: settings.hospitalName,
+            onTap: () => _showEditDialog(context, "Hospital Name",
+                settings.hospitalName, (val) => settings.setHospitalName(val)),
+          ),
+          const Divider(),
+
+          // SECTION 2: APP PREFERENCES
+          _buildSectionHeader("App Preferences"),
+          ListTile(
+            leading: const Icon(Icons.language, color: Colors.blue),
+            title: const Text("Language"),
+            subtitle: Text(settings.language),
+            trailing: DropdownButton<String>(
+              value: settings.language,
+              underline: Container(), // Hide underline
+              items: ["English", "Amharic"].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                if (newValue != null) settings.setLanguage(newValue);
+              },
+            ),
+          ),
+          /* 
+          // FUTURE: Theme Switcher
+          SwitchListTile(
+            secondary: const Icon(Icons.dark_mode, color: Colors.purple),
+            title: const Text("Dark Mode"),
+            value: settings.isDarkMode,
+            onChanged: (val) => settings.toggleTheme(val),
+          ),
+          */
+
+          const Divider(),
+
+          // SECTION 3: ABOUT
+          _buildSectionHeader("About"),
+          const ListTile(
+            leading: Icon(Icons.info_outline, color: Colors.grey),
+            title: Text("Version"),
+            subtitle: Text("1.0.0 (Beta)"),
+          ),
+          const ListTile(
+            leading: Icon(Icons.privacy_tip_outlined, color: Colors.grey),
+            title: Text("Privacy Policy"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper Widget for Section Headers
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+      child: Text(
+        title.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
         ),
+      ),
+    );
+  }
+
+  // Helper Widget for List Tiles
+  Widget _buildListTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.blueAccent),
+      title: Text(title),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.black54)),
+      trailing: const Icon(Icons.edit, size: 16, color: Colors.grey),
+      onTap: onTap,
+    );
+  }
+
+  // Helper Dialog for Editing Text
+  void _showEditDialog(BuildContext context, String title, String currentValue,
+      Function(String) onSave) {
+    final controller = TextEditingController(text: currentValue);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Edit $title"),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(hintText: "Enter $title"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (controller.text.isNotEmpty) {
+                onSave(controller.text);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("Save"),
+          ),
+        ],
       ),
     );
   }
