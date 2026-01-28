@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:medScan_AI/core/snackbar/custom_snackbar.dart';
+import 'package:medScan_AI/language_classes/language.dart';
+import 'package:medScan_AI/language_classes/language_constants.dart';
+import 'package:medScan_AI/main.dart';
 import 'package:provider/provider.dart';
 import 'settings_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String _selectedLanguage = 'English';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedLanguage();
+  }
+
+  Future<void> _loadSelectedLanguage() async {
+    Locale locale = await getLocale();
+    setState(() {
+      _selectedLanguage = Language.languageList()
+          .firstWhere((lang) => lang.languageCode == locale.languageCode)
+          .name;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Settings",
+          translation(context).welcome,
           style: GoogleFonts.poppins(),
         ),
         flexibleSpace: Container(
@@ -66,14 +92,25 @@ class SettingsScreen extends StatelessWidget {
             trailing: DropdownButton<String>(
               value: settings.language,
               underline: Container(), // Hide underline
-              items: ["English", "Amharic"].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+              items: Language.languageList()
+                  .map(
+                    (language) => DropdownMenuItem<String>(
+                      value: language.name,
+                      child: Text(language.name),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (newValue) async {
+                Locale _locale = await setLocale(
+                  newValue == "English" ? "en" : "am",
                 );
-              }).toList(),
-              onChanged: (newValue) {
-                if (newValue != null) settings.setLanguage(newValue);
+
+                MyApp.setLocale(context, _locale);
+
+                CustomSnackBar.showSuccess(
+                  context,
+                  "$newValue ${"language changed successfully"}",
+                );
               },
             ),
           ),

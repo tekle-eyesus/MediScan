@@ -47,7 +47,7 @@ dependencies:
 
   # UI & Utilities
   google_fonts: ^6.1.0
-  intl: ^0.19.0 # For date formatting
+  intl: any # For date formatting
   cached_network_image: ^3.3.1 # To display the heatmap smoothly
   flutter_spinkit: ^5.2.0 # Loading indicators
   # For the Charts (Confidence UI)
@@ -60,8 +60,11 @@ dependencies:
   pdf: ^3.10.8
   printing: ^5.11.1
   flutter_launcher_icons: ^0.13.1
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.2.3
   package_info_plus: ^5.0.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +90,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
