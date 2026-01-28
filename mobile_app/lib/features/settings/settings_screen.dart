@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          translation(context).welcome,
+          "Settings",
           style: GoogleFonts.poppins(),
         ),
         flexibleSpace: Container(
