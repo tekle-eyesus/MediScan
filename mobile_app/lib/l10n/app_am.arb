@@ -24,5 +24,11 @@
   "abnormalityDetected": "ያልተለመደ ነገር ተገኝቷል",
   "healthyLungs": "ጤናማ ሳንባ",
   "generateMedicalReport": "የህክምና ሪፖርት አውጣ",
-  "pneumonia": "የሳንባ ምች"
+  "pneumonia": "የሳንባ ምች",
+  "historyTitle": "የታካሚ መዝገቦች",
+  "noRecordsFound": "ምንም መዝገብ አልተገኘም",
+  "recordDeleted": "መዝገቡ ተሰርዟል",
+  "patientPrefix": "ታካሚ:",
+  "doctorPrefix": "ዶ/ር:",
+  "confidencePrefix": "እርግጠኝነት:"
 }

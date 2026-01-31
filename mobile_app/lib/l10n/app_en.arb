@@ -44,5 +44,12 @@
   "abnormalityDetected": "Abnormality Detected",
   "healthyLungs": "Healthy Lungs",
   "generateMedicalReport": "GENERATE MEDICAL REPORT",
-  "pneumonia": "PNEUMONIA"
+  "pneumonia": "PNEUMONIA",
+  "section2": "==========History Screen Strings==========",
+  "historyTitle": "Patient Records",
+  "noRecordsFound": "No records found",
+  "recordDeleted": "Record deleted",
+  "patientPrefix": "Patient:",
+  "doctorPrefix": "Dr:",
+  "confidencePrefix": "Confidence:"
 }
