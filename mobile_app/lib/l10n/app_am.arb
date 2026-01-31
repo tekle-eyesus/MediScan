@@ -1,4 +1,5 @@
 {
-  "hello": "ሰላም",
-  "welcome": "ወደ MedScan AI እንኳን በደህና መጡ"
+  "scan": "ስካን",
+  "history": "ታሪክ",
+  "settings": "ቅንብሮች"
 }

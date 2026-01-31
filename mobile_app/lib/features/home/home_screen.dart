@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medScan_AI/features/settings/settings_screen.dart';
+import 'package:medScan_AI/language_classes/language_constants.dart';
 import '../diagnosis/diagnosis_screen.dart';
 import '../history/history_screen.dart';
 
@@ -40,15 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.qr_code_scanner),
-            label: 'Scan',
+            label: translation(context).scan,
           ),
           NavigationDestination(
             icon: Icon(Icons.history),
-            label: 'History',
+            label: translation(context).history,
           ),
           NavigationDestination(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: translation(context).settings,
           ),
         ],
       ),

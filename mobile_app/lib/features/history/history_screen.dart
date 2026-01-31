@@ -15,6 +15,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
+    _loadRecords();
+  }
+
+  void _loadRecords() {
     // Load data when screen opens
     Future.microtask(() =>
         Provider.of<HistoryProvider>(context, listen: false).loadRecords());

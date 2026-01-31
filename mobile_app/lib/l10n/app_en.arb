@@ -1,4 +1,14 @@
 {
-  "hello": "Hello",
-  "welcome": "Welcome to MedScan AI"
+  "scan": "Scan",
+  "@scan": {
+    "description": "Label for the scanning feature"
+  },
+  "history": "History",
+  "@history": {
+    "description": "Label for the history or past activities screen"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Label for the settings screen"
+  }
 }
