@@ -88,9 +88,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: const Icon(Icons.language, color: Colors.blue),
             title: const Text("Language"),
-            subtitle: Text(settings.language),
+            subtitle: Text(_selectedLanguage),
             trailing: DropdownButton<String>(
-              value: settings.language,
+              value: _selectedLanguage,
               underline: Container(), // Hide underline
               items: Language.languageList()
                   .map(
@@ -111,6 +111,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   context,
                   "$newValue ${"language changed successfully"}",
                 );
+                setState(() {
+                  _selectedLanguage = newValue!;
+                });
               },
             ),
           ),
