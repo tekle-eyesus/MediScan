@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medScan_AI/core/snackbar/custom_snackbar.dart';
+import 'package:medScan_AI/language_classes/language_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'history_provider.dart';
@@ -30,7 +31,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Patient Records"),
+        title: Text(translation(context).historyTitle),
         foregroundColor: Colors.white,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -51,7 +52,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: provider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : provider.records.isEmpty
-              ? const Center(child: Text("No records found."))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.folder_open,
+                        size: 80,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        translation(context).noRecordsFound,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : ListView.builder(
                   itemCount: provider.records.length,
                   padding: const EdgeInsets.all(10),
@@ -81,7 +101,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                         CustomSnackBar.showInfo(
                           context,
-                          "Record deleted",
+                          translation(context).recordDeleted,
                         );
                       },
                       child: Container(
@@ -109,11 +129,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                           ),
                           title: Text(
-                            "Patient: ${record['patient_id']}",
+                            "${translation(context).patientPrefix}${record['patient_id']}",
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                              "Dr. ${record['doctor_id']} • $formattedDate"),
+                              "${translation(context).doctorPrefix}${record['doctor_id']} • $formattedDate"),
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -127,7 +147,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ),
                               ),
                               Text(
-                                "${(record['confidence'] * 100).toStringAsFixed(1)}%",
+                                "${translation(context).confidencePrefix}${(record['confidence'] * 100).toStringAsFixed(1)}%",
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.grey),
                               ),
