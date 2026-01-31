@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medScan_AI/core/widgets/full_screen_image.dart';
 import 'package:medScan_AI/features/diagnosis/widgets/confidence_chart.dart';
 import 'package:medScan_AI/features/settings/settings_provider.dart';
+import 'package:medScan_AI/language_classes/language_constants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     final pdf = pw.Document();
     final result = provider.diagnosisResult!;
     final settings = Provider.of<SettingsProvider>(context, listen: false);
+    final String appTitle = translation(context).appTitle;
     // Load Images for PDF
     final imageBytes = await provider.selectedImage!.readAsBytes();
     // final logoImage = await imageFromAssetBundle(
@@ -43,7 +45,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text("MediScan Ethiopia",
+                    pw.Text("MediScan AI Report",
                         style: pw.TextStyle(
                             fontSize: 24, fontWeight: pw.FontWeight.bold)),
                     pw.Text("Date: ${DateTime.now().toString().split(' ')[0]}"),
@@ -131,7 +133,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "MediScan AI",
+          translation(context).mediScanAi,
           style: GoogleFonts.poppins(),
         ),
         flexibleSpace: Container(
@@ -149,7 +151,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: provider.clearImage,
-              tooltip: "Reset",
+              tooltip: translation(context).reset,
             )
         ],
       ),
@@ -167,15 +169,19 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                 border: Border.all(color: Colors.grey[400]!),
               ),
               child: provider.selectedImage == null
-                  ? const Center(
+                  ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.add_photo_alternate,
                               size: 50, color: Colors.grey),
                           SizedBox(height: 10),
-                          Text("Upload X-Ray to Analyze",
-                              style: TextStyle(color: Colors.grey)),
+                          Text(
+                            translation(context).uploadXray,
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
                         ],
                       ),
                     )
@@ -198,7 +204,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                         ? null
                         : () => provider.pickImage(ImageSource.camera),
                     icon: const Icon(Icons.camera_alt),
-                    label: const Text("Camera"),
+                    label: Text(translation(context).camera),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -211,7 +217,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                         ? null
                         : () => provider.pickImage(ImageSource.gallery),
                     icon: const Icon(Icons.photo_library),
-                    label: const Text("Gallery"),
+                    label: Text(translation(context).gallery),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -240,7 +246,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                           child: CircularProgressIndicator(
                               color: Colors.white, strokeWidth: 2),
                         )
-                      : const Text("RUN AI DIAGNOSIS",
+                      : Text(translation(context).runAiDiagnosis,
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
@@ -333,7 +339,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("Heatmap",
+                      Text(translation(context).heatmap,
                           style: TextStyle(color: Colors.white)),
                       const SizedBox(width: 8),
                       CupertinoSwitch(
@@ -375,7 +381,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Diagnosis Result",
+                      translation(context).diagnosisResult,
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     const SizedBox(height: 5),
@@ -398,7 +404,9 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        isPneumonia ? "Abnormality Detected" : "Healthy Lungs",
+                        isPneumonia
+                            ? translation(context).abnormalityDetected
+                            : translation(context).healthyLungs,
                         style: TextStyle(
                           color: isPneumonia ? Colors.red : Colors.green,
                           fontWeight: FontWeight.w600,
@@ -421,7 +429,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
           width: double.infinity,
           child: ElevatedButton.icon(
             icon: const Icon(Icons.print),
-            label: const Text("GENERATE MEDICAL REPORT"),
+            label: Text(translation(context).generateMedicalReport),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue[900],
               foregroundColor: Colors.white,
