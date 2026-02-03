@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Settings",
+          translation(context).settingsTitle,
           style: GoogleFonts.poppins(),
         ),
         flexibleSpace: Container(
@@ -56,38 +56,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           // SECTION 1: DOCTOR PROFILE
-          _buildSectionHeader("Doctor Profile"),
+          _buildSectionHeader(translation(context).doctorProfile),
           _buildListTile(
             context,
             icon: Icons.person,
-            title: "Doctor Name",
+            title: translation(context).doctorName,
             subtitle: settings.doctorName,
-            onTap: () => _showEditDialog(context, "Doctor Name",
-                settings.doctorName, (val) => settings.setDoctorName(val)),
+            onTap: () => _showEditDialog(
+                context,
+                translation(context).doctorName,
+                settings.doctorName,
+                (val) => settings.setDoctorName(val)),
           ),
           _buildListTile(
             context,
             icon: Icons.badge,
-            title: "Doctor ID",
+            title: translation(context).doctorId,
             subtitle: settings.doctorId,
-            onTap: () => _showEditDialog(context, "Doctor ID",
+            onTap: () => _showEditDialog(context, translation(context).doctorId,
                 settings.doctorId, (val) => settings.setDoctorId(val)),
           ),
           _buildListTile(
             context,
             icon: Icons.local_hospital,
-            title: "Hospital / Clinic",
+            title: translation(context).hospitalClinic,
             subtitle: settings.hospitalName,
-            onTap: () => _showEditDialog(context, "Hospital Name",
-                settings.hospitalName, (val) => settings.setHospitalName(val)),
+            onTap: () => _showEditDialog(
+                context,
+                translation(context).hospitalName,
+                settings.hospitalName,
+                (val) => settings.setHospitalName(val)),
           ),
           const Divider(),
 
           // SECTION 2: APP PREFERENCES
-          _buildSectionHeader("App Preferences"),
+          _buildSectionHeader(translation(context).appPreferences),
           ListTile(
             leading: const Icon(Icons.language, color: Colors.blue),
-            title: const Text("Language"),
+            title: Text(translation(context).language),
             subtitle: Text(_selectedLanguage),
             trailing: DropdownButton<String>(
               value: _selectedLanguage,
@@ -109,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 CustomSnackBar.showSuccess(
                   context,
-                  "$newValue ${"language changed successfully"}",
+                  "$newValue ${translation(context).languageChanged}",
                 );
                 setState(() {
                   _selectedLanguage = newValue!;
@@ -130,15 +136,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
 
           // SECTION 3: ABOUT
-          _buildSectionHeader("About"),
+          _buildSectionHeader(translation(context).about),
           const ListTile(
             leading: Icon(Icons.info_outline, color: Colors.grey),
             title: Text("Version"),
             subtitle: Text("1.0.0 (Beta)"),
           ),
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.privacy_tip_outlined, color: Colors.grey),
-            title: Text("Privacy Policy"),
+            title: Text(translation(context).privacyPolicy),
           ),
         ],
       ),
@@ -184,15 +190,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Edit $title"),
+        title: Text(" ${translation(context).edit} $title"),
         content: TextField(
           controller: controller,
-          decoration: InputDecoration(hintText: "Enter $title"),
+          decoration: InputDecoration(
+              hintText: " ${translation(context).enter} $title"),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: Text(translation(context).cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -201,7 +208,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.pop(context);
               }
             },
-            child: const Text("Save"),
+            child: Text(translation(context).save),
           ),
         ],
       ),
