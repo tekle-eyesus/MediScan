@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medScan_AI/core/snackbar/custom_snackbar.dart';
+import 'package:medScan_AI/features/history/history_detail_screen.dart';
 import 'package:medScan_AI/language_classes/language_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -154,7 +155,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ],
                           ),
                           onTap: () {
-                            // Optional: Navigate to a details view to see the Heatmap again
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    HistoryDetailScreen(record: record),
+                              ),
+                            );
                           },
                         ),
                       ),
