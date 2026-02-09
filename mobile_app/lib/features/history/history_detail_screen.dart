@@ -1,8 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medScan_AI/features/settings/settings_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
 import '../../core/widgets/full_screen_image.dart';
 import '../diagnosis/widgets/confidence_chart.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class HistoryDetailScreen extends StatelessWidget {
   final Map<String, dynamic> record;
@@ -23,6 +29,156 @@ class HistoryDetailScreen extends StatelessWidget {
     final String formattedDate =
         DateFormat('MMMM d, yyyy • h:mm a').format(date);
 
+    Future<void> _generatePdf(BuildContext context) async {
+      final pdf = pw.Document();
+
+      // 1. Get Data from the Record
+      final String patientId = record['patient_id'];
+      final String prediction = record['prediction'];
+      final double confidence = record['confidence'];
+      final String dateStr = record['created_at'];
+      final String? heatmapBase64 = record['heatmap_base64'];
+
+      // 2. Get Data from Settings (Hospital Name, Current Doctor printing it)
+      final settings = Provider.of<SettingsProvider>(context, listen: false);
+
+      // 3. Prepare Image (Decode Base64)
+      pw.MemoryImage? pdfImage;
+      if (heatmapBase64 != null) {
+        final Uint8List bytes = base64Decode(heatmapBase64);
+        pdfImage = pw.MemoryImage(bytes);
+      }
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // HEADER
+                pw.Header(
+                  level: 0,
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text("MediScan Medical Report",
+                          style: pw.TextStyle(
+                              fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                      pw.Text(
+                          "Generated: ${DateTime.now().toString().split(' ')[0]}"),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+
+                // PATIENT & DOCTOR INFO BOX
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(10),
+                  decoration: pw.BoxDecoration(border: pw.Border.all()),
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text("Patient ID: $patientId",
+                              style:
+                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                          pw.Text("Scan Date: $dateStr"),
+                        ],
+                      ),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.end,
+                        children: [
+                          pw.Text("Doctor: ${record['doctor_id']}"),
+                          pw.Text("Facility: ${settings.hospitalName}"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 30),
+
+                // MAIN IMAGE (HEATMAP)
+                if (pdfImage != null)
+                  pw.Center(
+                    child: pw.Column(
+                      children: [
+                        pw.Text("AI Visual Analysis (Heatmap)",
+                            style: const pw.TextStyle(fontSize: 14)),
+                        pw.SizedBox(height: 10),
+                        pw.Container(
+                          height: 300,
+                          decoration: pw.BoxDecoration(
+                            border: pw.Border.all(color: PdfColors.grey),
+                          ),
+                          child: pw.Image(pdfImage, fit: pw.BoxFit.contain),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  pw.Center(child: pw.Text("No Image Data Available")),
+
+                pw.SizedBox(height: 20),
+
+                // DIAGNOSIS RESULTS
+                pw.Text("Findings:",
+                    style: pw.TextStyle(
+                        fontSize: 18, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 5),
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(10),
+                  color: PdfColors.grey100,
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        children: [
+                          pw.Text("Prediction: "),
+                          pw.Text(prediction,
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                  color: prediction == "PNEUMONIA"
+                                      ? PdfColors.red
+                                      : PdfColors.green)),
+                        ],
+                      ),
+                      pw.Text(
+                          "AI Confidence: ${(confidence * 100).toStringAsFixed(1)}%"),
+                    ],
+                  ),
+                ),
+
+                pw.Spacer(),
+
+                // FOOTER
+                pw.Divider(),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("MediScan Ethiopia - AI Assist",
+                        style: const pw.TextStyle(
+                            fontSize: 10, color: PdfColors.grey)),
+                    pw.Text("Consult a specialist for final diagnosis.",
+                        style: const pw.TextStyle(
+                            fontSize: 10, color: PdfColors.grey)),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
+      // Open Print/Share Dialog
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save(),
+        name: 'MediScan_Report_$patientId', //file name
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
@@ -39,8 +195,9 @@ class HistoryDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.print),
+            tooltip: "Print Report",
             onPressed: () {
-              // print pdf like in the home screen
+              _generatePdf(context);
             },
           )
         ],
