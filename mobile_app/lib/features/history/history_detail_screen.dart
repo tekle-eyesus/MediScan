@@ -25,8 +25,25 @@ class HistoryDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         title: const Text("Scan Details"),
-        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF438EA5), Color(0xFF4DA49C)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.print),
+            onPressed: () {
+              // print pdf like in the home screen
+            },
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -186,10 +203,23 @@ class HistoryDetailScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // DOCTOR INFO
-            ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.person)),
-              title: Text("Diagnosed by: Dr. $doctorId"),
-              subtitle: const Text("Recorded in local database"),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  const BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 5))
+                ],
+              ),
+              child: ListTile(
+                leading: const CircleAvatar(child: Icon(Icons.person)),
+                title: Text("Diagnosed by: Dr. $doctorId"),
+                subtitle: const Text("Recorded in local database"),
+              ),
             ),
           ],
         ),
