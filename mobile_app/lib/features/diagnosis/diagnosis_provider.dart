@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/services/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiagnosisProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -11,6 +12,7 @@ class DiagnosisProvider extends ChangeNotifier {
   bool _isLoading = false;
   Map<String, dynamic>? _diagnosisResult;
   String? _errorMessage;
+  String _doctorName = "Dr. Unknown";
 
   // Getters
   File? get selectedImage => _selectedImage;
@@ -46,21 +48,27 @@ class DiagnosisProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //  Load from Storage
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    _doctorName = prefs.getString('doctorName') ?? "Dr. Unknown";
+    notifyListeners();
+  }
+
   // 3. Analyze Image (Call Backend)
   Future<void> analyzeImage() async {
     if (_selectedImage == null) return;
-
+    await _loadPreferences(); // Ensure we have the latest doctor name
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      // Dummy IDs for now (In a real app, these come from Login)
       final result = await _apiService.uploadXray(
         imageFile: _selectedImage!,
         patientId:
-            "ETH-${DateTime.now().millisecondsSinceEpoch}", // Auto-gen ID
-        doctorId: "Dr. Demo",
+            "ETH-${DateTime.now().millisecondsSinceEpoch.toString().substring(0, 8)}",
+        doctorId: "DR-${_doctorName.replaceAll(' ', '').toUpperCase()}",
       );
 
       _diagnosisResult = result;
