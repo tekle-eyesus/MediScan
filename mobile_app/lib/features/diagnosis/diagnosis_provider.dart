@@ -64,6 +64,8 @@ class DiagnosisProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // image check before upload if it is the snan image ( negative case) or not (positive case)
+
       final result = await _apiService.uploadXray(
         imageFile: _selectedImage!,
         patientId:
